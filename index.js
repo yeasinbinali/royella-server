@@ -9,7 +9,6 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.d7bt1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -26,12 +25,19 @@ async function run() {
         const roomCollection = client.db('RoyellaDB').collection('rooms');
 
         app.get('/rooms', async (req, res) => {
-            const rooms = roomCollection.find();
-            const result = await rooms.toArray();
+            const result = await roomCollection.find().toArray();
             res.send(result);
-        })
+        });
+        
+        app.get('/roomsRangeByPrice', async (req, res) => {
+            const { minPrice, maxPrice } = req.query;
+            const result = await roomCollection.find({
+                price_per_night: { $gte: parseInt(minPrice), $lte: parseInt(maxPrice) }
+            }).toArray();
+            res.json(result);
+        });
 
-        app.get('/rooms/:id', async(req, res) => {
+        app.get('/rooms/:id', async (req, res) => {
             const id = req.params.id;
             const room = new ObjectId(id);
             const result = await roomCollection.findOne(room);
