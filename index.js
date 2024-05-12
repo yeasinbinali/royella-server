@@ -29,12 +29,12 @@ async function run() {
             res.send(result);
         });
         
-        app.get('/roomsRangeByPrice', async (req, res) => {
+        app.get('/roomsPriceByRange', async (req, res) => {
             const { minPrice, maxPrice } = req.query;
             const result = await roomCollection.find({
                 price_per_night: { $gte: parseInt(minPrice), $lte: parseInt(maxPrice) }
             }).toArray();
-            res.json(result);
+            res.send(result);
         });
 
         app.get('/rooms/:id', async (req, res) => {
