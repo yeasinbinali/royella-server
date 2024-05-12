@@ -23,12 +23,13 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         const roomCollection = client.db('RoyellaDB').collection('rooms');
+        const bookingCollection = client.db('RoyellaDB').collection('bookings');
 
         app.get('/rooms', async (req, res) => {
             const result = await roomCollection.find().toArray();
             res.send(result);
         });
-        
+
         app.get('/roomsPriceByRange', async (req, res) => {
             const { minPrice, maxPrice } = req.query;
             const result = await roomCollection.find({
@@ -41,6 +42,12 @@ async function run() {
             const id = req.params.id;
             const room = new ObjectId(id);
             const result = await roomCollection.findOne(room);
+            res.send(result);
+        })
+
+        app.post('/bookingRoom', async (req, res) => {
+            const room = req.body;
+            const result = await bookingCollection.insertOne(room);
             res.send(result);
         })
 
