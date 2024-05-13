@@ -47,7 +47,19 @@ async function run() {
 
         app.post('/bookingRoom', async (req, res) => {
             const room = req.body;
-            const result = await bookingCollection.insertOne(room);
+            const roomDescription = {
+                _id: room._id,
+                description: room.description,
+                price_per_night: room.price_per_night,
+                size: room.size,
+                availability: 'Booked',
+                special_offers: room.special_offers,
+                reviews: room.reviews,
+                date: room.date,
+                user: room.user,
+                email: room.email
+            }
+            const result = await bookingCollection.insertOne(roomDescription);
             res.send(result);
         })
 
