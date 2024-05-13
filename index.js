@@ -24,6 +24,7 @@ async function run() {
     try {
         const roomCollection = client.db('RoyellaDB').collection('rooms');
         const bookingCollection = client.db('RoyellaDB').collection('bookings');
+        const reviewCollection = client.db('RoyellaDB').collection('reviews');
 
         app.get('/rooms', async (req, res) => {
             const result = await roomCollection.find().toArray();
@@ -44,6 +45,7 @@ async function run() {
             const result = await roomCollection.findOne(room);
             res.send(result);
         })
+
 
         app.post('/bookingRoom', async (req, res) => {
             const room = req.body;
@@ -100,6 +102,18 @@ async function run() {
             const result = await bookingCollection.deleteOne(query);
             res.send(result);
         })
+
+        app.post('/reviews', async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            res.send(result);
+        })
+
+        app.get('/reviews', async (req, res) => {
+            const result = await reviewCollection.find().toArray();
+            res.send(result);
+        })
+
 
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
