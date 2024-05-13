@@ -52,7 +52,11 @@ async function run() {
         })
 
         app.get('/bookingRoom', async(req, res) => {
-            const result = await bookingCollection.find().toArray();
+            let query = {};
+            if(req.query?.email) {
+                email = req.query.email;
+            }
+            const result = await bookingCollection.find(query).toArray();
             res.send(result);
         })
 
