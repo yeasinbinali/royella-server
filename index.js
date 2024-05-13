@@ -40,35 +40,43 @@ async function run() {
 
         app.get('/rooms/:id', async (req, res) => {
             const id = req.params.id;
-            const room = new ObjectId(id);
+            const room = { _id: new ObjectId(id) }
             const result = await roomCollection.findOne(room);
             res.send(result);
         })
 
         app.post('/bookingRoom', async (req, res) => {
             const room = req.body;
-            const roomDescription = {
-                _id: room._id,
-                description: room.description,
-                price_per_night: room.price_per_night,
-                size: room.size,
-                availability: 'Booked',
-                special_offers: room.special_offers,
-                reviews: room.reviews,
-                date: room.date,
-                user: room.user,
-                email: room.email
-            }
-            const result = await bookingCollection.insertOne(roomDescription);
+            // const roomDescription = {
+            //     _id: room._id,
+            //     image: room.image,
+            //     description: room.description,
+            //     price_per_night: room.price_per_night,
+            //     size: room.size,
+            //     availability: 'Booked',
+            //     special_offers: room.special_offers,
+            //     reviews: room.reviews,
+            //     date: room.date,
+            //     user: room.user,
+            //     email: room.email
+            // }
+            const result = await bookingCollection.insertOne(room);
             res.send(result);
         })
 
-        app.get('/bookingRoom', async(req, res) => {
+        app.get('/bookingRoom', async (req, res) => {
             let query = {};
-            if(req.query?.email) {
-                email = req.query.email;
+            if (req.query?.email) {
+                query = { email: req.query.email }
             }
             const result = await bookingCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        app.get('/bookingRoom/:id', async (req, res) => {
+            const id = req.params.id;
+            const bookRoom = { _id: new ObjectId(id) };
+            const result = await bookingCollection.findOne(bookRoom);
             res.send(result);
         })
 
