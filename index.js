@@ -46,22 +46,24 @@ async function run() {
             res.send(result);
         })
 
+        app.patch('/rooms/:id', async (req, res) => {
+            const id = req.params.id;
+            const bookedRoom = req.body;
+            console.log(id, bookedRoom);
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updatedBooked = {
+                $set: {
+                    availability: bookedRoom.availability
+                }
+            }
+            const result = await roomCollection.updateOne(filter, updatedBooked, options);
+            res.send(result);
+        })
+
 
         app.post('/bookingRoom', async (req, res) => {
             const room = req.body;
-            // const roomDescription = {
-            //     _id: room._id,
-            //     image: room.image,
-            //     description: room.description,
-            //     price_per_night: room.price_per_night,
-            //     size: room.size,
-            //     availability: 'Booked',
-            //     special_offers: room.special_offers,
-            //     reviews: room.reviews,
-            //     date: room.date,
-            //     user: room.user,
-            //     email: room.email
-            // }
             const result = await bookingCollection.insertOne(room);
             res.send(result);
         })
