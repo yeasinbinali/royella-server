@@ -110,7 +110,7 @@ async function run() {
         })
 
         app.get('/reviews', async (req, res) => {
-            const result = await reviewCollection.find().toArray();
+            const result = await reviewCollection.find().sort({ timestamp: -1 }).toArray();
             res.send(result);
         })
 
